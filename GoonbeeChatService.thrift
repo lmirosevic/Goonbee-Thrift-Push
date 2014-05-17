@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Goonbee. All rights reserved.
 //
 
-include "GoonbeeSharedThriftService.thrift"
+include "shared/GoonbeeSharedThriftService.thrift"
 
 
 namespace js GBChatService
