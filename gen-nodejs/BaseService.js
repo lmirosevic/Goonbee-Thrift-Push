@@ -5,13 +5,13 @@
 //
 var Thrift = require('thrift').Thrift;
 
-var ttypes = require('./GoonbeeSharedThriftService_types');
+var ttypes = require('./GoonbeeShared_types');
 //HELPER FUNCTIONS AND STRUCTURES
 
-GBSharedThriftService.GoonbeeSharedThriftService_alive_args = function(args) {
+GBShared.BaseService_alive_args = function(args) {
 };
-GBSharedThriftService.GoonbeeSharedThriftService_alive_args.prototype = {};
-GBSharedThriftService.GoonbeeSharedThriftService_alive_args.prototype.read = function(input) {
+GBShared.BaseService_alive_args.prototype = {};
+GBShared.BaseService_alive_args.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -29,23 +29,31 @@ GBSharedThriftService.GoonbeeSharedThriftService_alive_args.prototype.read = fun
   return;
 };
 
-GBSharedThriftService.GoonbeeSharedThriftService_alive_args.prototype.write = function(output) {
-  output.writeStructBegin('GoonbeeSharedThriftService_alive_args');
+GBShared.BaseService_alive_args.prototype.write = function(output) {
+  output.writeStructBegin('BaseService_alive_args');
   output.writeFieldStop();
   output.writeStructEnd();
   return;
 };
 
-GBSharedThriftService.GoonbeeSharedThriftService_alive_result = function(args) {
+GBShared.BaseService_alive_result = function(args) {
   this.success = null;
+  this.error = null;
+  if (args instanceof ttypes.RequestError) {
+    this.error = args;
+    return;
+  }
   if (args) {
     if (args.success !== undefined) {
       this.success = args.success;
     }
+    if (args.error !== undefined) {
+      this.error = args.error;
+    }
   }
 };
-GBSharedThriftService.GoonbeeSharedThriftService_alive_result.prototype = {};
-GBSharedThriftService.GoonbeeSharedThriftService_alive_result.prototype.read = function(input) {
+GBShared.BaseService_alive_result.prototype = {};
+GBShared.BaseService_alive_result.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -65,9 +73,14 @@ GBSharedThriftService.GoonbeeSharedThriftService_alive_result.prototype.read = f
         input.skip(ftype);
       }
       break;
-      case 0:
+      case 1:
+      if (ftype == Thrift.Type.STRUCT) {
+        this.error = new ttypes.RequestError();
+        this.error.read(input);
+      } else {
         input.skip(ftype);
-        break;
+      }
+      break;
       default:
         input.skip(ftype);
     }
@@ -77,11 +90,16 @@ GBSharedThriftService.GoonbeeSharedThriftService_alive_result.prototype.read = f
   return;
 };
 
-GBSharedThriftService.GoonbeeSharedThriftService_alive_result.prototype.write = function(output) {
-  output.writeStructBegin('GoonbeeSharedThriftService_alive_result');
+GBShared.BaseService_alive_result.prototype.write = function(output) {
+  output.writeStructBegin('BaseService_alive_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.STRING, 0);
     output.writeString(this.success);
+    output.writeFieldEnd();
+  }
+  if (this.error !== null && this.error !== undefined) {
+    output.writeFieldBegin('error', Thrift.Type.STRUCT, 1);
+    this.error.write(output);
     output.writeFieldEnd();
   }
   output.writeFieldStop();
@@ -89,29 +107,29 @@ GBSharedThriftService.GoonbeeSharedThriftService_alive_result.prototype.write = 
   return;
 };
 
-GBSharedThriftService.GoonbeeSharedThriftServiceClient = exports.Client = function(output, pClass) {
+GBShared.BaseServiceClient = exports.Client = function(output, pClass) {
     this.output = output;
     this.pClass = pClass;
     this.seqid = 0;
     this._reqs = {};
 };
-GBSharedThriftService.GoonbeeSharedThriftServiceClient.prototype = {};
-GBSharedThriftService.GoonbeeSharedThriftServiceClient.prototype.alive = function(callback) {
+GBShared.BaseServiceClient.prototype = {};
+GBShared.BaseServiceClient.prototype.alive = function(callback) {
   this.seqid += 1;
   this._reqs[this.seqid] = callback;
   this.send_alive();
 };
 
-GBSharedThriftService.GoonbeeSharedThriftServiceClient.prototype.send_alive = function() {
+GBShared.BaseServiceClient.prototype.send_alive = function() {
   var output = new this.pClass(this.output);
   output.writeMessageBegin('alive', Thrift.MessageType.CALL, this.seqid);
-  var args = new GBSharedThriftService.GoonbeeSharedThriftService_alive_args();
+  var args = new GBShared.BaseService_alive_args();
   args.write(output);
   output.writeMessageEnd();
   return this.output.flush();
 };
 
-GBSharedThriftService.GoonbeeSharedThriftServiceClient.prototype.recv_alive = function(input,mtype,rseqid) {
+GBShared.BaseServiceClient.prototype.recv_alive = function(input,mtype,rseqid) {
   var callback = this._reqs[rseqid] || function() {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -120,19 +138,22 @@ GBSharedThriftService.GoonbeeSharedThriftServiceClient.prototype.recv_alive = fu
     input.readMessageEnd();
     return callback(x);
   }
-  var result = new GBSharedThriftService.GoonbeeSharedThriftService_alive_result();
+  var result = new GBShared.BaseService_alive_result();
   result.read(input);
   input.readMessageEnd();
 
+  if (null !== result.error) {
+    return callback(result.error);
+  }
   if (null !== result.success) {
     return callback(null, result.success);
   }
   return callback('alive failed: unknown result');
 };
-GBSharedThriftService.GoonbeeSharedThriftServiceProcessor = exports.Processor = function(handler) {
+GBShared.BaseServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler
 }
-GBSharedThriftService.GoonbeeSharedThriftServiceProcessor.prototype.process = function(input, output) {
+GBShared.BaseServiceProcessor.prototype.process = function(input, output) {
   var r = input.readMessageBegin();
   if (this['process_' + r.fname]) {
     return this['process_' + r.fname].call(this, r.rseqid, input, output);
@@ -147,12 +168,12 @@ GBSharedThriftService.GoonbeeSharedThriftServiceProcessor.prototype.process = fu
   }
 }
 
-GBSharedThriftService.GoonbeeSharedThriftServiceProcessor.prototype.process_alive = function(seqid, input, output) {
-  var args = new GBSharedThriftService.GoonbeeSharedThriftService_alive_args();
+GBShared.BaseServiceProcessor.prototype.process_alive = function(seqid, input, output) {
+  var args = new GBShared.BaseService_alive_args();
   args.read(input);
   input.readMessageEnd();
   this._handler.alive(function (err, result) {
-    var result = new GBSharedThriftService.GoonbeeSharedThriftService_alive_result((err != null ? err : {success: result}));
+    var result = new GBShared.BaseService_alive_result((err != null ? err : {success: result}));
     output.writeMessageBegin("alive", Thrift.MessageType.REPLY, seqid);
     result.write(output);
     output.writeMessageEnd();

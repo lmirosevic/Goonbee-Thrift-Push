@@ -15,375 +15,9 @@
 #import "TObjective-C.h"
 #import "TBase.h"
 
-#import "GoonbeeSharedThriftService.h"
+#import "GoonbeeShared.h"
 
 #import "GoonbeePushService.h"
-
-@implementation GBPushRequestError
-
-- (id) init
-{
-  return [super initWithName: @"RequestError" reason: @"unknown" userInfo: nil];
-}
-
-- (id) initWithStatus: (int) status message: (NSString *) message
-{
-  self = [self init];
-  __status = status;
-  __status_isset = YES;
-  __message = [message retain_stub];
-  __message_isset = YES;
-  return self;
-}
-
-- (id) initWithCoder: (NSCoder *) decoder
-{
-  self = [super initWithCoder: decoder];
-  if ([decoder containsValueForKey: @"status"])
-  {
-    __status = [decoder decodeIntForKey: @"status"];
-    __status_isset = YES;
-  }
-  if ([decoder containsValueForKey: @"message"])
-  {
-    __message = [[decoder decodeObjectForKey: @"message"] retain_stub];
-    __message_isset = YES;
-  }
-  return self;
-}
-
-- (void) encodeWithCoder: (NSCoder *) encoder
-{
-  [super encodeWithCoder: encoder];
-  if (__status_isset)
-  {
-    [encoder encodeInt: __status forKey: @"status"];
-  }
-  if (__message_isset)
-  {
-    [encoder encodeObject: __message forKey: @"message"];
-  }
-}
-
-- (void) dealloc
-{
-  [__message release_stub];
-  [super dealloc_stub];
-}
-
-- (int) status {
-  return __status;
-}
-
-- (void) setStatus: (int) status {
-  __status = status;
-  __status_isset = YES;
-}
-
-- (BOOL) statusIsSet {
-  return __status_isset;
-}
-
-- (void) unsetStatus {
-  __status_isset = NO;
-}
-
-- (NSString *) message {
-  return [[__message retain_stub] autorelease_stub];
-}
-
-- (void) setMessage: (NSString *) message {
-  [message retain_stub];
-  [__message release_stub];
-  __message = message;
-  __message_isset = YES;
-}
-
-- (BOOL) messageIsSet {
-  return __message_isset;
-}
-
-- (void) unsetMessage {
-  [__message release_stub];
-  __message = nil;
-  __message_isset = NO;
-}
-
-- (void) read: (id <TProtocol>) inProtocol
-{
-  NSString * fieldName;
-  int fieldType;
-  int fieldID;
-
-  [inProtocol readStructBeginReturningName: NULL];
-  while (true)
-  {
-    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
-    if (fieldType == TType_STOP) { 
-      break;
-    }
-    switch (fieldID)
-    {
-      case 1:
-        if (fieldType == TType_I32) {
-          int fieldValue = [inProtocol readI32];
-          [self setStatus: fieldValue];
-        } else { 
-          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        }
-        break;
-      case 2:
-        if (fieldType == TType_STRING) {
-          NSString * fieldValue = [inProtocol readString];
-          [self setMessage: fieldValue];
-        } else { 
-          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        }
-        break;
-      default:
-        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        break;
-    }
-    [inProtocol readFieldEnd];
-  }
-  [inProtocol readStructEnd];
-}
-
-- (void) write: (id <TProtocol>) outProtocol {
-  [outProtocol writeStructBeginWithName: @"RequestError"];
-  if (__status_isset) {
-    [outProtocol writeFieldBeginWithName: @"status" type: TType_I32 fieldID: 1];
-    [outProtocol writeI32: __status];
-    [outProtocol writeFieldEnd];
-  }
-  if (__message_isset) {
-    if (__message != nil) {
-      [outProtocol writeFieldBeginWithName: @"message" type: TType_STRING fieldID: 2];
-      [outProtocol writeString: __message];
-      [outProtocol writeFieldEnd];
-    }
-  }
-  [outProtocol writeFieldStop];
-  [outProtocol writeStructEnd];
-}
-
-- (void) validate {
-  // check for required fields
-}
-
-- (NSString *) description {
-  NSMutableString * ms = [NSMutableString stringWithString: @"RequestError("];
-  [ms appendString: @"status:"];
-  [ms appendFormat: @"%i", __status];
-  [ms appendString: @",message:"];
-  [ms appendFormat: @"\"%@\"", __message];
-  [ms appendString: @")"];
-  return [NSString stringWithString: ms];
-}
-
-@end
-
-@implementation GBPushRange
-
-- (id) init
-{
-  self = [super init];
-#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
-#endif
-  return self;
-}
-
-- (id) initWithDirection: (int) direction index: (int32_t) index length: (int32_t) length
-{
-  self = [super init];
-  __direction = direction;
-  __direction_isset = YES;
-  __index = index;
-  __index_isset = YES;
-  __length = length;
-  __length_isset = YES;
-  return self;
-}
-
-- (id) initWithCoder: (NSCoder *) decoder
-{
-  self = [super init];
-  if ([decoder containsValueForKey: @"direction"])
-  {
-    __direction = [decoder decodeIntForKey: @"direction"];
-    __direction_isset = YES;
-  }
-  if ([decoder containsValueForKey: @"index"])
-  {
-    __index = [decoder decodeInt32ForKey: @"index"];
-    __index_isset = YES;
-  }
-  if ([decoder containsValueForKey: @"length"])
-  {
-    __length = [decoder decodeInt32ForKey: @"length"];
-    __length_isset = YES;
-  }
-  return self;
-}
-
-- (void) encodeWithCoder: (NSCoder *) encoder
-{
-  if (__direction_isset)
-  {
-    [encoder encodeInt: __direction forKey: @"direction"];
-  }
-  if (__index_isset)
-  {
-    [encoder encodeInt32: __index forKey: @"index"];
-  }
-  if (__length_isset)
-  {
-    [encoder encodeInt32: __length forKey: @"length"];
-  }
-}
-
-- (void) dealloc
-{
-  [super dealloc_stub];
-}
-
-- (int) direction {
-  return __direction;
-}
-
-- (void) setDirection: (int) direction {
-  __direction = direction;
-  __direction_isset = YES;
-}
-
-- (BOOL) directionIsSet {
-  return __direction_isset;
-}
-
-- (void) unsetDirection {
-  __direction_isset = NO;
-}
-
-- (int32_t) index {
-  return __index;
-}
-
-- (void) setIndex: (int32_t) index {
-  __index = index;
-  __index_isset = YES;
-}
-
-- (BOOL) indexIsSet {
-  return __index_isset;
-}
-
-- (void) unsetIndex {
-  __index_isset = NO;
-}
-
-- (int32_t) length {
-  return __length;
-}
-
-- (void) setLength: (int32_t) length {
-  __length = length;
-  __length_isset = YES;
-}
-
-- (BOOL) lengthIsSet {
-  return __length_isset;
-}
-
-- (void) unsetLength {
-  __length_isset = NO;
-}
-
-- (void) read: (id <TProtocol>) inProtocol
-{
-  NSString * fieldName;
-  int fieldType;
-  int fieldID;
-
-  [inProtocol readStructBeginReturningName: NULL];
-  while (true)
-  {
-    [inProtocol readFieldBeginReturningName: &fieldName type: &fieldType fieldID: &fieldID];
-    if (fieldType == TType_STOP) { 
-      break;
-    }
-    switch (fieldID)
-    {
-      case 1:
-        if (fieldType == TType_I32) {
-          int fieldValue = [inProtocol readI32];
-          [self setDirection: fieldValue];
-        } else { 
-          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        }
-        break;
-      case 2:
-        if (fieldType == TType_I32) {
-          int32_t fieldValue = [inProtocol readI32];
-          [self setIndex: fieldValue];
-        } else { 
-          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        }
-        break;
-      case 3:
-        if (fieldType == TType_I32) {
-          int32_t fieldValue = [inProtocol readI32];
-          [self setLength: fieldValue];
-        } else { 
-          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        }
-        break;
-      default:
-        [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
-        break;
-    }
-    [inProtocol readFieldEnd];
-  }
-  [inProtocol readStructEnd];
-}
-
-- (void) write: (id <TProtocol>) outProtocol {
-  [outProtocol writeStructBeginWithName: @"Range"];
-  if (__direction_isset) {
-    [outProtocol writeFieldBeginWithName: @"direction" type: TType_I32 fieldID: 1];
-    [outProtocol writeI32: __direction];
-    [outProtocol writeFieldEnd];
-  }
-  if (__index_isset) {
-    [outProtocol writeFieldBeginWithName: @"index" type: TType_I32 fieldID: 2];
-    [outProtocol writeI32: __index];
-    [outProtocol writeFieldEnd];
-  }
-  if (__length_isset) {
-    [outProtocol writeFieldBeginWithName: @"length" type: TType_I32 fieldID: 3];
-    [outProtocol writeI32: __length];
-    [outProtocol writeFieldEnd];
-  }
-  [outProtocol writeFieldStop];
-  [outProtocol writeStructEnd];
-}
-
-- (void) validate {
-  // check for required fields
-}
-
-- (NSString *) description {
-  NSMutableString * ms = [NSMutableString stringWithString: @"Range("];
-  [ms appendString: @"direction:"];
-  [ms appendFormat: @"%i", __direction];
-  [ms appendString: @",index:"];
-  [ms appendFormat: @"%i", __index];
-  [ms appendString: @",length:"];
-  [ms appendFormat: @"%i", __length];
-  [ms appendString: @")"];
-  return [NSString stringWithString: ms];
-}
-
-@end
 
 @implementation GBPushPushToken
 
@@ -820,14 +454,28 @@
 @end
 
 @interface GBPushSetChannelSubscriptionStatus_result : NSObject <TBase, NSCoding> {
+  GBSharedRequestError * __error;
+
+  BOOL __error_isset;
 }
 
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+@property (nonatomic, retain, getter=error, setter=setError:) GBSharedRequestError * error;
+#endif
+
 - (id) init;
+- (id) initWithError: (GBSharedRequestError *) error;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
 
 - (void) validate;
+
+#if !__has_feature(objc_arc)
+- (GBSharedRequestError *) error;
+- (void) setError: (GBSharedRequestError *) error;
+#endif
+- (BOOL) errorIsSet;
 
 @end
 
@@ -836,17 +484,63 @@
 - (id) init
 {
   self = [super init];
+#if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
+#endif
+  return self;
+}
+
+- (id) initWithError: (GBSharedRequestError *) error
+{
+  self = [super init];
+  __error = [error retain_stub];
+  __error_isset = YES;
   return self;
 }
 
 - (id) initWithCoder: (NSCoder *) decoder
 {
   self = [super init];
+  if ([decoder containsValueForKey: @"error"])
+  {
+    __error = [[decoder decodeObjectForKey: @"error"] retain_stub];
+    __error_isset = YES;
+  }
   return self;
 }
 
 - (void) encodeWithCoder: (NSCoder *) encoder
 {
+  if (__error_isset)
+  {
+    [encoder encodeObject: __error forKey: @"error"];
+  }
+}
+
+- (void) dealloc
+{
+  [__error release_stub];
+  [super dealloc_stub];
+}
+
+- (GBSharedRequestError *) error {
+  return [[__error retain_stub] autorelease_stub];
+}
+
+- (void) setError: (GBSharedRequestError *) error {
+  [error retain_stub];
+  [__error release_stub];
+  __error = error;
+  __error_isset = YES;
+}
+
+- (BOOL) errorIsSet {
+  return __error_isset;
+}
+
+- (void) unsetError {
+  [__error release_stub];
+  __error = nil;
+  __error_isset = NO;
 }
 
 - (void) read: (id <TProtocol>) inProtocol
@@ -864,6 +558,16 @@
     }
     switch (fieldID)
     {
+      case 1:
+        if (fieldType == TType_STRUCT) {
+          GBSharedRequestError *fieldValue = [[GBSharedRequestError alloc] init];
+          [fieldValue read: inProtocol];
+          [self setError: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -876,6 +580,13 @@
 - (void) write: (id <TProtocol>) outProtocol {
   [outProtocol writeStructBeginWithName: @"SetChannelSubscriptionStatus_result"];
 
+  if (__error_isset) {
+    if (__error != nil) {
+      [outProtocol writeFieldBeginWithName: @"error" type: TType_STRUCT fieldID: 1];
+      [__error write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
+  }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
 }
@@ -886,15 +597,17 @@
 
 - (NSString *) description {
   NSMutableString * ms = [NSMutableString stringWithString: @"SetChannelSubscriptionStatus_result("];
+  [ms appendString: @"error:"];
+  [ms appendFormat: @"%@", __error];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }
 
 @end
 
-@interface GBPushsubsriptions_args : NSObject <TBase, NSCoding> {
+@interface GBPushsubscribedChannels_args : NSObject <TBase, NSCoding> {
   GBPushPushToken * __pushToken;
-  GBPushRange * __range;
+  GBSharedRange * __range;
 
   BOOL __pushToken_isset;
   BOOL __range_isset;
@@ -902,11 +615,11 @@
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
 @property (nonatomic, retain, getter=pushToken, setter=setPushToken:) GBPushPushToken * pushToken;
-@property (nonatomic, retain, getter=range, setter=setRange:) GBPushRange * range;
+@property (nonatomic, retain, getter=range, setter=setRange:) GBSharedRange * range;
 #endif
 
 - (id) init;
-- (id) initWithPushToken: (GBPushPushToken *) pushToken range: (GBPushRange *) range;
+- (id) initWithPushToken: (GBPushPushToken *) pushToken range: (GBSharedRange *) range;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -920,14 +633,14 @@
 - (BOOL) pushTokenIsSet;
 
 #if !__has_feature(objc_arc)
-- (GBPushRange *) range;
-- (void) setRange: (GBPushRange *) range;
+- (GBSharedRange *) range;
+- (void) setRange: (GBSharedRange *) range;
 #endif
 - (BOOL) rangeIsSet;
 
 @end
 
-@implementation GBPushsubsriptions_args
+@implementation GBPushsubscribedChannels_args
 
 - (id) init
 {
@@ -937,7 +650,7 @@
   return self;
 }
 
-- (id) initWithPushToken: (GBPushPushToken *) pushToken range: (GBPushRange *) range
+- (id) initWithPushToken: (GBPushPushToken *) pushToken range: (GBSharedRange *) range
 {
   self = [super init];
   __pushToken = [pushToken retain_stub];
@@ -1003,11 +716,11 @@
   __pushToken_isset = NO;
 }
 
-- (GBPushRange *) range {
+- (GBSharedRange *) range {
   return [[__range retain_stub] autorelease_stub];
 }
 
-- (void) setRange: (GBPushRange *) range {
+- (void) setRange: (GBSharedRange *) range {
   [range retain_stub];
   [__range release_stub];
   __range = range;
@@ -1051,7 +764,7 @@
         break;
       case 2:
         if (fieldType == TType_STRUCT) {
-          GBPushRange *fieldValue = [[GBPushRange alloc] init];
+          GBSharedRange *fieldValue = [[GBSharedRange alloc] init];
           [fieldValue read: inProtocol];
           [self setRange: fieldValue];
           [fieldValue release_stub];
@@ -1069,7 +782,7 @@
 }
 
 - (void) write: (id <TProtocol>) outProtocol {
-  [outProtocol writeStructBeginWithName: @"subsriptions_args"];
+  [outProtocol writeStructBeginWithName: @"subscribedChannels_args"];
   if (__pushToken_isset) {
     if (__pushToken != nil) {
       [outProtocol writeFieldBeginWithName: @"pushToken" type: TType_STRUCT fieldID: 1];
@@ -1093,7 +806,7 @@
 }
 
 - (NSString *) description {
-  NSMutableString * ms = [NSMutableString stringWithString: @"subsriptions_args("];
+  NSMutableString * ms = [NSMutableString stringWithString: @"subscribedChannels_args("];
   [ms appendString: @"pushToken:"];
   [ms appendFormat: @"%@", __pushToken];
   [ms appendString: @",range:"];
@@ -1104,18 +817,21 @@
 
 @end
 
-@interface GBPushSubsriptions_result : NSObject <TBase, NSCoding> {
+@interface GBPushSubscribedChannels_result : NSObject <TBase, NSCoding> {
   NSMutableArray * __success;
+  GBSharedRequestError * __error;
 
   BOOL __success_isset;
+  BOOL __error_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
 @property (nonatomic, retain, getter=success, setter=setSuccess:) NSMutableArray * success;
+@property (nonatomic, retain, getter=error, setter=setError:) GBSharedRequestError * error;
 #endif
 
 - (id) init;
-- (id) initWithSuccess: (NSMutableArray *) success;
+- (id) initWithSuccess: (NSMutableArray *) success error: (GBSharedRequestError *) error;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -1128,9 +844,15 @@
 #endif
 - (BOOL) successIsSet;
 
+#if !__has_feature(objc_arc)
+- (GBSharedRequestError *) error;
+- (void) setError: (GBSharedRequestError *) error;
+#endif
+- (BOOL) errorIsSet;
+
 @end
 
-@implementation GBPushSubsriptions_result
+@implementation GBPushSubscribedChannels_result
 
 - (id) init
 {
@@ -1140,11 +862,13 @@
   return self;
 }
 
-- (id) initWithSuccess: (NSMutableArray *) success
+- (id) initWithSuccess: (NSMutableArray *) success error: (GBSharedRequestError *) error
 {
   self = [super init];
   __success = [success retain_stub];
   __success_isset = YES;
+  __error = [error retain_stub];
+  __error_isset = YES;
   return self;
 }
 
@@ -1156,6 +880,11 @@
     __success = [[decoder decodeObjectForKey: @"success"] retain_stub];
     __success_isset = YES;
   }
+  if ([decoder containsValueForKey: @"error"])
+  {
+    __error = [[decoder decodeObjectForKey: @"error"] retain_stub];
+    __error_isset = YES;
+  }
   return self;
 }
 
@@ -1165,11 +894,16 @@
   {
     [encoder encodeObject: __success forKey: @"success"];
   }
+  if (__error_isset)
+  {
+    [encoder encodeObject: __error forKey: @"error"];
+  }
 }
 
 - (void) dealloc
 {
   [__success release_stub];
+  [__error release_stub];
   [super dealloc_stub];
 }
 
@@ -1192,6 +926,27 @@
   [__success release_stub];
   __success = nil;
   __success_isset = NO;
+}
+
+- (GBSharedRequestError *) error {
+  return [[__error retain_stub] autorelease_stub];
+}
+
+- (void) setError: (GBSharedRequestError *) error {
+  [error retain_stub];
+  [__error release_stub];
+  __error = error;
+  __error_isset = YES;
+}
+
+- (BOOL) errorIsSet {
+  return __error_isset;
+}
+
+- (void) unsetError {
+  [__error release_stub];
+  __error = nil;
+  __error_isset = NO;
 }
 
 - (void) read: (id <TProtocol>) inProtocol
@@ -1227,6 +982,16 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 1:
+        if (fieldType == TType_STRUCT) {
+          GBSharedRequestError *fieldValue = [[GBSharedRequestError alloc] init];
+          [fieldValue read: inProtocol];
+          [self setError: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -1237,7 +1002,7 @@
 }
 
 - (void) write: (id <TProtocol>) outProtocol {
-  [outProtocol writeStructBeginWithName: @"Subsriptions_result"];
+  [outProtocol writeStructBeginWithName: @"SubscribedChannels_result"];
 
   if (__success_isset) {
     if (__success != nil) {
@@ -1253,6 +1018,12 @@
       }
       [outProtocol writeFieldEnd];
     }
+  } else if (__error_isset) {
+    if (__error != nil) {
+      [outProtocol writeFieldBeginWithName: @"error" type: TType_STRUCT fieldID: 1];
+      [__error write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
   }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
@@ -1263,9 +1034,11 @@
 }
 
 - (NSString *) description {
-  NSMutableString * ms = [NSMutableString stringWithString: @"Subsriptions_result("];
+  NSMutableString * ms = [NSMutableString stringWithString: @"SubscribedChannels_result("];
   [ms appendString: @"success:"];
   [ms appendFormat: @"%@", __success];
+  [ms appendString: @",error:"];
+  [ms appendFormat: @"%@", __error];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }
@@ -1484,16 +1257,19 @@
 
 @interface GBPushSubsriptionStatus_result : NSObject <TBase, NSCoding> {
   BOOL __success;
+  GBSharedRequestError * __error;
 
   BOOL __success_isset;
+  BOOL __error_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
 @property (nonatomic, getter=success, setter=setSuccess:) BOOL success;
+@property (nonatomic, retain, getter=error, setter=setError:) GBSharedRequestError * error;
 #endif
 
 - (id) init;
-- (id) initWithSuccess: (BOOL) success;
+- (id) initWithSuccess: (BOOL) success error: (GBSharedRequestError *) error;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -1505,6 +1281,12 @@
 - (void) setSuccess: (BOOL) success;
 #endif
 - (BOOL) successIsSet;
+
+#if !__has_feature(objc_arc)
+- (GBSharedRequestError *) error;
+- (void) setError: (GBSharedRequestError *) error;
+#endif
+- (BOOL) errorIsSet;
 
 @end
 
@@ -1518,11 +1300,13 @@
   return self;
 }
 
-- (id) initWithSuccess: (BOOL) success
+- (id) initWithSuccess: (BOOL) success error: (GBSharedRequestError *) error
 {
   self = [super init];
   __success = success;
   __success_isset = YES;
+  __error = [error retain_stub];
+  __error_isset = YES;
   return self;
 }
 
@@ -1534,6 +1318,11 @@
     __success = [decoder decodeBoolForKey: @"success"];
     __success_isset = YES;
   }
+  if ([decoder containsValueForKey: @"error"])
+  {
+    __error = [[decoder decodeObjectForKey: @"error"] retain_stub];
+    __error_isset = YES;
+  }
   return self;
 }
 
@@ -1543,10 +1332,15 @@
   {
     [encoder encodeBool: __success forKey: @"success"];
   }
+  if (__error_isset)
+  {
+    [encoder encodeObject: __error forKey: @"error"];
+  }
 }
 
 - (void) dealloc
 {
+  [__error release_stub];
   [super dealloc_stub];
 }
 
@@ -1565,6 +1359,27 @@
 
 - (void) unsetSuccess {
   __success_isset = NO;
+}
+
+- (GBSharedRequestError *) error {
+  return [[__error retain_stub] autorelease_stub];
+}
+
+- (void) setError: (GBSharedRequestError *) error {
+  [error retain_stub];
+  [__error release_stub];
+  __error = error;
+  __error_isset = YES;
+}
+
+- (BOOL) errorIsSet {
+  return __error_isset;
+}
+
+- (void) unsetError {
+  [__error release_stub];
+  __error = nil;
+  __error_isset = NO;
 }
 
 - (void) read: (id <TProtocol>) inProtocol
@@ -1590,6 +1405,16 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 1:
+        if (fieldType == TType_STRUCT) {
+          GBSharedRequestError *fieldValue = [[GBSharedRequestError alloc] init];
+          [fieldValue read: inProtocol];
+          [self setError: fieldValue];
+          [fieldValue release_stub];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -1606,6 +1431,12 @@
     [outProtocol writeFieldBeginWithName: @"success" type: TType_BOOL fieldID: 0];
     [outProtocol writeBool: __success];
     [outProtocol writeFieldEnd];
+  } else if (__error_isset) {
+    if (__error != nil) {
+      [outProtocol writeFieldBeginWithName: @"error" type: TType_STRUCT fieldID: 1];
+      [__error write: outProtocol];
+      [outProtocol writeFieldEnd];
+    }
   }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
@@ -1619,6 +1450,8 @@
   NSMutableString * ms = [NSMutableString stringWithString: @"SubsriptionStatus_result("];
   [ms appendString: @"success:"];
   [ms appendFormat: @"%i", __success];
+  [ms appendString: @",error:"];
+  [ms appendFormat: @"%@", __error];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }
@@ -1681,6 +1514,9 @@
   GBPushSetChannelSubscriptionStatus_result * result = [[[GBPushSetChannelSubscriptionStatus_result alloc] init] autorelease_stub];
   [result read: inProtocol];
   [inProtocol readMessageEnd];
+  if ([result errorIsSet]) {
+    @throw [result error];
+  }
   return;
 }
 
@@ -1690,10 +1526,10 @@
   [self recv_setChannelSubscriptionStatus];
 }
 
-- (void) send_subsriptions: (GBPushPushToken *) pushToken range: (GBPushRange *) range
+- (void) send_subscribedChannels: (GBPushPushToken *) pushToken range: (GBSharedRange *) range
 {
-  [outProtocol writeMessageBeginWithName: @"subsriptions" type: TMessageType_CALL sequenceID: 0];
-  [outProtocol writeStructBeginWithName: @"subsriptions_args"];
+  [outProtocol writeMessageBeginWithName: @"subscribedChannels" type: TMessageType_CALL sequenceID: 0];
+  [outProtocol writeStructBeginWithName: @"subscribedChannels_args"];
   if (pushToken != nil)  {
     [outProtocol writeFieldBeginWithName: @"pushToken" type: TType_STRUCT fieldID: 1];
     [pushToken write: outProtocol];
@@ -1710,7 +1546,7 @@
   [[outProtocol transport] flush];
 }
 
-- (NSMutableArray *) recv_subsriptions
+- (NSMutableArray *) recv_subscribedChannels
 {
   int msgType = 0;
   [inProtocol readMessageBeginReturningName: nil type: &msgType sequenceID: NULL];
@@ -1719,20 +1555,23 @@
     [inProtocol readMessageEnd];
     @throw x;
   }
-  GBPushSubsriptions_result * result = [[[GBPushSubsriptions_result alloc] init] autorelease_stub];
+  GBPushSubscribedChannels_result * result = [[[GBPushSubscribedChannels_result alloc] init] autorelease_stub];
   [result read: inProtocol];
   [inProtocol readMessageEnd];
   if ([result successIsSet]) {
     return [result success];
   }
+  if ([result errorIsSet]) {
+    @throw [result error];
+  }
   @throw [TApplicationException exceptionWithType: TApplicationException_MISSING_RESULT
-                                           reason: @"subsriptions failed: unknown result"];
+                                           reason: @"subscribedChannels failed: unknown result"];
 }
 
-- (NSMutableArray *) subsriptions: (GBPushPushToken *) pushToken range: (GBPushRange *) range
+- (NSMutableArray *) subscribedChannels: (GBPushPushToken *) pushToken range: (GBSharedRange *) range
 {
-  [self send_subsriptions : pushToken range: range];
-  return [self recv_subsriptions];
+  [self send_subscribedChannels : pushToken range: range];
+  return [self recv_subscribedChannels];
 }
 
 - (void) send_subsriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
@@ -1770,6 +1609,9 @@
   if ([result successIsSet]) {
     return [result success];
   }
+  if ([result errorIsSet]) {
+    @throw [result error];
+  }
   @throw [TApplicationException exceptionWithType: TApplicationException_MISSING_RESULT
                                            reason: @"subsriptionStatus failed: unknown result"];
 }
@@ -1801,12 +1643,12 @@
     [mMethodMap setValue: invocation forKey: @"setChannelSubscriptionStatus"];
   }
   {
-    SEL s = @selector(process_subsriptions_withSequenceID:inProtocol:outProtocol:);
+    SEL s = @selector(process_subscribedChannels_withSequenceID:inProtocol:outProtocol:);
     NSMethodSignature * sig = [self methodSignatureForSelector: s];
     NSInvocation * invocation = [NSInvocation invocationWithMethodSignature: sig];
     [invocation setSelector: s];
     [invocation retainArguments];
-    [mMethodMap setValue: invocation forKey: @"subsriptions"];
+    [mMethodMap setValue: invocation forKey: @"subscribedChannels"];
   }
   {
     SEL s = @selector(process_subsriptionStatus_withSequenceID:inProtocol:outProtocol:);
@@ -1874,14 +1716,14 @@
   [args release_stub];
 }
 
-- (void) process_subsriptions_withSequenceID: (int32_t) seqID inProtocol: (id<TProtocol>) inProtocol outProtocol: (id<TProtocol>) outProtocol
+- (void) process_subscribedChannels_withSequenceID: (int32_t) seqID inProtocol: (id<TProtocol>) inProtocol outProtocol: (id<TProtocol>) outProtocol
 {
-  GBPushsubsriptions_args * args = [[GBPushsubsriptions_args alloc] init];
+  GBPushsubscribedChannels_args * args = [[GBPushsubscribedChannels_args alloc] init];
   [args read: inProtocol];
   [inProtocol readMessageEnd];
-  GBPushSubsriptions_result * result = [[GBPushSubsriptions_result alloc] init];
-  [result setSuccess: [mService subsriptions: [args pushToken] range: [args range]]];
-  [outProtocol writeMessageBeginWithName: @"subsriptions"
+  GBPushSubscribedChannels_result * result = [[GBPushSubscribedChannels_result alloc] init];
+  [result setSuccess: [mService subscribedChannels: [args pushToken] range: [args range]]];
+  [outProtocol writeMessageBeginWithName: @"subscribedChannels"
                                     type: TMessageType_REPLY
                               sequenceID: seqID];
   [result write: outProtocol];
