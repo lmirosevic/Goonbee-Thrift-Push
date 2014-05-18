@@ -1,23 +1,17 @@
 //
-//  ChatService.thrift
-//  GBChatService
+//  GoonbeePushService.thrift
+//  Goonbee Thrift Push
 //
-//  Created by Luka Mirosevic on 17/04/2014.
+//  Created by Luka Mirosevic on 18/05/2014.
 //  Copyright (c) 2014 Goonbee. All rights reserved.
 //
 
 include "shared/GoonbeeSharedThriftService.thrift"
 
 
-namespace js GBChatService
-namespace cocoa GBChat
+namespace js GBPushService
+namespace cocoa GBPush
 
-
-enum ChatSorting {
-    PARTICIPANT_COUNT =     0,
-    MESSAGE_COUNT =         1,
-    DATE_CREATED =          2,
-}
 
 enum ResponseStatus {
     SUCCESS =               0,
@@ -28,96 +22,46 @@ enum ResponseStatus {
     PHASED_OUT =            5,
 }
 
+exception RequestError {
+    1: ResponseStatus       status,
+    2: optional string      message,
+}
+
 enum RangeDirection {
     FORWARDS =              0,
     BACKWARDS =             1,
 }
 
 struct Range {
-    1: RangeDirection direction,
-    2: i32 index,
-    3: i32 length,
+    1: RangeDirection       direction,
+    2: i32                  index,
+    3: i32                  length,
 }
 
-struct ChatStats {
-    1: i32 messageCount,
-    2: i32 participantCount,
+enum PushTokenType {
+    APNS =                  0,
+    GCM =                   1,
 }
 
-struct ChatMeta {
-    1: string ownerId,
-    2: string dateCreated,
-    3: string name,
-    4: string topic,
-}
-
-struct ChatOptions {
-    1: optional string name,
-    2: optional string topic,
-}
-
-struct Chat {
-    1: string id,
-    2: ChatMeta meta,
-    3: ChatStats stats,
-}
-
-struct Message {
-    1: i32 seq,
-    2: string dateCreated,
-    3: string authorName,
-    4: string content,
-}
-
-exception RequestError {
-    1: ResponseStatus status,
-    2: optional string message,
+struct PushToken {
+    1: PushTokenType        type,
+    2: string               token,
 }
 
 
-service GoonbeeChatService extends GoonbeeSharedThriftService.GoonbeeSharedThriftService {
+service GoonbeePushService extends GoonbeeSharedThriftService.GoonbeeSharedThriftService {
     /**
-     * Check whether the username is available or not
+     * Subscribe or unsubscribe from a particular channel. Idempotent.
      */
-    bool                isUsernameAvailable     (1: string username)                                                throws(1: RequestError error),
+    void                setChannelSubscriptionStatus    (1: PushToken pushToken, 2: string channel)
 
     /**
-     * Register a username, or change it if you are already registered. pass null or empty string to userId if not registered, returns userId on success
+     * Get list of channels the user is subscribed to.
      */
-    string              registerUsername        (1: string userId, 2: string username)                              throws(1: RequestError error),
+    list<string>        subsriptions                    (1: PushToken pushToken, 2: Range range )
 
     /**
-     * Create a new chat channel. Chats are created lazily so this method is identical to `chat` with an added chatOptions parameter. It is implemented as an alias to setChatOptions, which creates a chat lazily and then sets some options on it.
+     * Check whether the user is subscribed on a particular channel or not.
      */
-    Chat                newChat                 (1: string userId, 2: string chatId, 3: ChatOptions chatOptions)    throws(1: RequestError error),
-
-    /**
-     * Returns info on all available chat channels (e.g. how many messages, participators, date created, etc.)
-     */
-    list<Chat>          chats                   (1: ChatSorting sorting, 2: Range range)                            throws(1: RequestError error),
-
-    /**
-     * Returns info on a particular chat channel
-     */
-    Chat                chat                    (1: string userId, 2: string chatId)                                throws(1: RequestError error),
-
-    /**
-     * Post a new message on a certain chat channel
-     */
-    void                newMessage              (1: string userId, 2: string chatId, 3: string content)             throws(1: RequestError error),
-
-    /**
-     * Returns messags for a chat channel, according to range
-     */
-    list<Message>       messages                (1: string userId, 2: string chatId, 3: Range range)                throws(1: RequestError error),
-
-    /**
-     * Update a chat's meta. If the chat does not exist, it will be created lazily.
-     */
-    Chat                setChatOptions          (1: string userId, 2: string chatId, 3: ChatOptions chatOptions)    throws(1: RequestError error),
-
-    /**
-     * Get the total number of users registered with the chat service
-     */
-    i32                 globalUserCount         ()                                                                  throws(1: RequestError error),
+    bool                subsriptionStatus               (1: PushToken pushToken, 2: string channel )
 }
