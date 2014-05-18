@@ -1,7 +1,7 @@
-Goonbee Chat Thrift
+Goonbee Thrift Push
 ============
 
-Thrift service for Goonbee Chat Service
+Thrift service for Goonbee Push Service
 
 
 Copyright & License
