@@ -151,7 +151,7 @@ enum GBPushPushTokenType {
 @end
 
 @protocol GBPushGoonbeePushService <NSObject>
-- (void) setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel;  // throws TException
+- (void) setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel subscriptionStatus: (BOOL) subscriptionStatus;  // throws TException
 - (NSMutableArray *) subsriptions: (GBPushPushToken *) pushToken range: (GBPushRange *) range;  // throws TException
 - (BOOL) subsriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel;  // throws TException
 @end

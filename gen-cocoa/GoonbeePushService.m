@@ -560,18 +560,21 @@
 @interface GBPushsetChannelSubscriptionStatus_args : NSObject <TBase, NSCoding> {
   GBPushPushToken * __pushToken;
   NSString * __channel;
+  BOOL __subscriptionStatus;
 
   BOOL __pushToken_isset;
   BOOL __channel_isset;
+  BOOL __subscriptionStatus_isset;
 }
 
 #if TARGET_OS_IPHONE || (MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5)
 @property (nonatomic, retain, getter=pushToken, setter=setPushToken:) GBPushPushToken * pushToken;
 @property (nonatomic, retain, getter=channel, setter=setChannel:) NSString * channel;
+@property (nonatomic, getter=subscriptionStatus, setter=setSubscriptionStatus:) BOOL subscriptionStatus;
 #endif
 
 - (id) init;
-- (id) initWithPushToken: (GBPushPushToken *) pushToken channel: (NSString *) channel;
+- (id) initWithPushToken: (GBPushPushToken *) pushToken channel: (NSString *) channel subscriptionStatus: (BOOL) subscriptionStatus;
 
 - (void) read: (id <TProtocol>) inProtocol;
 - (void) write: (id <TProtocol>) outProtocol;
@@ -590,6 +593,12 @@
 #endif
 - (BOOL) channelIsSet;
 
+#if !__has_feature(objc_arc)
+- (BOOL) subscriptionStatus;
+- (void) setSubscriptionStatus: (BOOL) subscriptionStatus;
+#endif
+- (BOOL) subscriptionStatusIsSet;
+
 @end
 
 @implementation GBPushsetChannelSubscriptionStatus_args
@@ -602,13 +611,15 @@
   return self;
 }
 
-- (id) initWithPushToken: (GBPushPushToken *) pushToken channel: (NSString *) channel
+- (id) initWithPushToken: (GBPushPushToken *) pushToken channel: (NSString *) channel subscriptionStatus: (BOOL) subscriptionStatus
 {
   self = [super init];
   __pushToken = [pushToken retain_stub];
   __pushToken_isset = YES;
   __channel = [channel retain_stub];
   __channel_isset = YES;
+  __subscriptionStatus = subscriptionStatus;
+  __subscriptionStatus_isset = YES;
   return self;
 }
 
@@ -625,6 +636,11 @@
     __channel = [[decoder decodeObjectForKey: @"channel"] retain_stub];
     __channel_isset = YES;
   }
+  if ([decoder containsValueForKey: @"subscriptionStatus"])
+  {
+    __subscriptionStatus = [decoder decodeBoolForKey: @"subscriptionStatus"];
+    __subscriptionStatus_isset = YES;
+  }
   return self;
 }
 
@@ -637,6 +653,10 @@
   if (__channel_isset)
   {
     [encoder encodeObject: __channel forKey: @"channel"];
+  }
+  if (__subscriptionStatus_isset)
+  {
+    [encoder encodeBool: __subscriptionStatus forKey: @"subscriptionStatus"];
   }
 }
 
@@ -689,6 +709,23 @@
   __channel_isset = NO;
 }
 
+- (BOOL) subscriptionStatus {
+  return __subscriptionStatus;
+}
+
+- (void) setSubscriptionStatus: (BOOL) subscriptionStatus {
+  __subscriptionStatus = subscriptionStatus;
+  __subscriptionStatus_isset = YES;
+}
+
+- (BOOL) subscriptionStatusIsSet {
+  return __subscriptionStatus_isset;
+}
+
+- (void) unsetSubscriptionStatus {
+  __subscriptionStatus_isset = NO;
+}
+
 - (void) read: (id <TProtocol>) inProtocol
 {
   NSString * fieldName;
@@ -722,6 +759,14 @@
           [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         }
         break;
+      case 3:
+        if (fieldType == TType_BOOL) {
+          BOOL fieldValue = [inProtocol readBool];
+          [self setSubscriptionStatus: fieldValue];
+        } else { 
+          [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
+        }
+        break;
       default:
         [TProtocolUtil skipType: fieldType onProtocol: inProtocol];
         break;
@@ -747,6 +792,11 @@
       [outProtocol writeFieldEnd];
     }
   }
+  if (__subscriptionStatus_isset) {
+    [outProtocol writeFieldBeginWithName: @"subscriptionStatus" type: TType_BOOL fieldID: 3];
+    [outProtocol writeBool: __subscriptionStatus];
+    [outProtocol writeFieldEnd];
+  }
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
 }
@@ -761,6 +811,8 @@
   [ms appendFormat: @"%@", __pushToken];
   [ms appendString: @",channel:"];
   [ms appendFormat: @"\"%@\"", __channel];
+  [ms appendString: @",subscriptionStatus:"];
+  [ms appendFormat: @"%i", __subscriptionStatus];
   [ms appendString: @")"];
   return [NSString stringWithString: ms];
 }
@@ -1594,7 +1646,7 @@
   [super dealloc_stub];
 }
 
-- (void) send_setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
+- (void) send_setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel subscriptionStatus: (BOOL) subscriptionStatus
 {
   [outProtocol writeMessageBeginWithName: @"setChannelSubscriptionStatus" type: TMessageType_CALL sequenceID: 0];
   [outProtocol writeStructBeginWithName: @"setChannelSubscriptionStatus_args"];
@@ -1608,6 +1660,9 @@
     [outProtocol writeString: channel];
     [outProtocol writeFieldEnd];
   }
+  [outProtocol writeFieldBeginWithName: @"subscriptionStatus" type: TType_BOOL fieldID: 3];
+  [outProtocol writeBool: subscriptionStatus];
+  [outProtocol writeFieldEnd];
   [outProtocol writeFieldStop];
   [outProtocol writeStructEnd];
   [outProtocol writeMessageEnd];
@@ -1629,9 +1684,9 @@
   return;
 }
 
-- (void) setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
+- (void) setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel subscriptionStatus: (BOOL) subscriptionStatus
 {
-  [self send_setChannelSubscriptionStatus : pushToken channel: channel];
+  [self send_setChannelSubscriptionStatus : pushToken channel: channel subscriptionStatus: subscriptionStatus];
   [self recv_setChannelSubscriptionStatus];
 }
 
@@ -1808,7 +1863,7 @@
   [args read: inProtocol];
   [inProtocol readMessageEnd];
   GBPushSetChannelSubscriptionStatus_result * result = [[GBPushSetChannelSubscriptionStatus_result alloc] init];
-  [mService setChannelSubscriptionStatus: [args pushToken] channel: [args channel]];
+  [mService setChannelSubscriptionStatus: [args pushToken] channel: [args channel] subscriptionStatus: [args subscriptionStatus]];
   [outProtocol writeMessageBeginWithName: @"setChannelSubscriptionStatus"
                                     type: TMessageType_REPLY
                               sequenceID: seqID];

@@ -53,15 +53,15 @@ service GoonbeePushService extends GoonbeeSharedThriftService.GoonbeeSharedThrif
     /**
      * Subscribe or unsubscribe from a particular channel. Idempotent.
      */
-    void                setChannelSubscriptionStatus    (1: PushToken pushToken, 2: string channel)
+    void                setChannelSubscriptionStatus    (1: PushToken pushToken, 2: string channel, 3: bool subscriptionStatus)
 
     /**
      * Get list of channels the user is subscribed to.
      */
-    list<string>        subsriptions                    (1: PushToken pushToken, 2: Range range )
+    list<string>        subsriptions                    (1: PushToken pushToken, 2: Range range)
 
     /**
      * Check whether the user is subscribed on a particular channel or not.
      */
-    bool                subsriptionStatus               (1: PushToken pushToken, 2: string channel )
+    bool                subsriptionStatus               (1: PushToken pushToken, 2: string channel)
 }
