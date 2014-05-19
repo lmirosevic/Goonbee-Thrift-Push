@@ -60,7 +60,7 @@ enum GBPushPushTokenType {
 @protocol GBPushGoonbeePushService <NSObject>
 - (void) setChannelSubscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel subscriptionStatus: (BOOL) subscriptionStatus;  // throws GBSharedRequestError *, TException
 - (NSMutableArray *) subscribedChannels: (GBPushPushToken *) pushToken range: (GBSharedRange *) range;  // throws GBSharedRequestError *, TException
-- (BOOL) subsriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel;  // throws GBSharedRequestError *, TException
+- (BOOL) subscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel;  // throws GBSharedRequestError *, TException
 @end
 
 @interface GBPushGoonbeePushServiceClient : NSObject <GBPushGoonbeePushService> {

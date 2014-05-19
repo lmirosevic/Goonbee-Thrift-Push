@@ -1045,7 +1045,7 @@
 
 @end
 
-@interface GBPushsubsriptionStatus_args : NSObject <TBase, NSCoding> {
+@interface GBPushsubscriptionStatus_args : NSObject <TBase, NSCoding> {
   GBPushPushToken * __pushToken;
   NSString * __channel;
 
@@ -1080,7 +1080,7 @@
 
 @end
 
-@implementation GBPushsubsriptionStatus_args
+@implementation GBPushsubscriptionStatus_args
 
 - (id) init
 {
@@ -1220,7 +1220,7 @@
 }
 
 - (void) write: (id <TProtocol>) outProtocol {
-  [outProtocol writeStructBeginWithName: @"subsriptionStatus_args"];
+  [outProtocol writeStructBeginWithName: @"subscriptionStatus_args"];
   if (__pushToken_isset) {
     if (__pushToken != nil) {
       [outProtocol writeFieldBeginWithName: @"pushToken" type: TType_STRUCT fieldID: 1];
@@ -1244,7 +1244,7 @@
 }
 
 - (NSString *) description {
-  NSMutableString * ms = [NSMutableString stringWithString: @"subsriptionStatus_args("];
+  NSMutableString * ms = [NSMutableString stringWithString: @"subscriptionStatus_args("];
   [ms appendString: @"pushToken:"];
   [ms appendFormat: @"%@", __pushToken];
   [ms appendString: @",channel:"];
@@ -1255,7 +1255,7 @@
 
 @end
 
-@interface GBPushSubsriptionStatus_result : NSObject <TBase, NSCoding> {
+@interface GBPushSubscriptionStatus_result : NSObject <TBase, NSCoding> {
   BOOL __success;
   GBSharedRequestError * __error;
 
@@ -1290,7 +1290,7 @@
 
 @end
 
-@implementation GBPushSubsriptionStatus_result
+@implementation GBPushSubscriptionStatus_result
 
 - (id) init
 {
@@ -1425,7 +1425,7 @@
 }
 
 - (void) write: (id <TProtocol>) outProtocol {
-  [outProtocol writeStructBeginWithName: @"SubsriptionStatus_result"];
+  [outProtocol writeStructBeginWithName: @"SubscriptionStatus_result"];
 
   if (__success_isset) {
     [outProtocol writeFieldBeginWithName: @"success" type: TType_BOOL fieldID: 0];
@@ -1447,7 +1447,7 @@
 }
 
 - (NSString *) description {
-  NSMutableString * ms = [NSMutableString stringWithString: @"SubsriptionStatus_result("];
+  NSMutableString * ms = [NSMutableString stringWithString: @"SubscriptionStatus_result("];
   [ms appendString: @"success:"];
   [ms appendFormat: @"%i", __success];
   [ms appendString: @",error:"];
@@ -1574,10 +1574,10 @@
   return [self recv_subscribedChannels];
 }
 
-- (void) send_subsriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
+- (void) send_subscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
 {
-  [outProtocol writeMessageBeginWithName: @"subsriptionStatus" type: TMessageType_CALL sequenceID: 0];
-  [outProtocol writeStructBeginWithName: @"subsriptionStatus_args"];
+  [outProtocol writeMessageBeginWithName: @"subscriptionStatus" type: TMessageType_CALL sequenceID: 0];
+  [outProtocol writeStructBeginWithName: @"subscriptionStatus_args"];
   if (pushToken != nil)  {
     [outProtocol writeFieldBeginWithName: @"pushToken" type: TType_STRUCT fieldID: 1];
     [pushToken write: outProtocol];
@@ -1594,7 +1594,7 @@
   [[outProtocol transport] flush];
 }
 
-- (BOOL) recv_subsriptionStatus
+- (BOOL) recv_subscriptionStatus
 {
   int msgType = 0;
   [inProtocol readMessageBeginReturningName: nil type: &msgType sequenceID: NULL];
@@ -1603,7 +1603,7 @@
     [inProtocol readMessageEnd];
     @throw x;
   }
-  GBPushSubsriptionStatus_result * result = [[[GBPushSubsriptionStatus_result alloc] init] autorelease_stub];
+  GBPushSubscriptionStatus_result * result = [[[GBPushSubscriptionStatus_result alloc] init] autorelease_stub];
   [result read: inProtocol];
   [inProtocol readMessageEnd];
   if ([result successIsSet]) {
@@ -1613,13 +1613,13 @@
     @throw [result error];
   }
   @throw [TApplicationException exceptionWithType: TApplicationException_MISSING_RESULT
-                                           reason: @"subsriptionStatus failed: unknown result"];
+                                           reason: @"subscriptionStatus failed: unknown result"];
 }
 
-- (BOOL) subsriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
+- (BOOL) subscriptionStatus: (GBPushPushToken *) pushToken channel: (NSString *) channel
 {
-  [self send_subsriptionStatus : pushToken channel: channel];
-  return [self recv_subsriptionStatus];
+  [self send_subscriptionStatus : pushToken channel: channel];
+  return [self recv_subscriptionStatus];
 }
 
 @end
@@ -1651,12 +1651,12 @@
     [mMethodMap setValue: invocation forKey: @"subscribedChannels"];
   }
   {
-    SEL s = @selector(process_subsriptionStatus_withSequenceID:inProtocol:outProtocol:);
+    SEL s = @selector(process_subscriptionStatus_withSequenceID:inProtocol:outProtocol:);
     NSMethodSignature * sig = [self methodSignatureForSelector: s];
     NSInvocation * invocation = [NSInvocation invocationWithMethodSignature: sig];
     [invocation setSelector: s];
     [invocation retainArguments];
-    [mMethodMap setValue: invocation forKey: @"subsriptionStatus"];
+    [mMethodMap setValue: invocation forKey: @"subscriptionStatus"];
   }
   return self;
 }
@@ -1733,14 +1733,14 @@
   [args release_stub];
 }
 
-- (void) process_subsriptionStatus_withSequenceID: (int32_t) seqID inProtocol: (id<TProtocol>) inProtocol outProtocol: (id<TProtocol>) outProtocol
+- (void) process_subscriptionStatus_withSequenceID: (int32_t) seqID inProtocol: (id<TProtocol>) inProtocol outProtocol: (id<TProtocol>) outProtocol
 {
-  GBPushsubsriptionStatus_args * args = [[GBPushsubsriptionStatus_args alloc] init];
+  GBPushsubscriptionStatus_args * args = [[GBPushsubscriptionStatus_args alloc] init];
   [args read: inProtocol];
   [inProtocol readMessageEnd];
-  GBPushSubsriptionStatus_result * result = [[GBPushSubsriptionStatus_result alloc] init];
-  [result setSuccess: [mService subsriptionStatus: [args pushToken] channel: [args channel]]];
-  [outProtocol writeMessageBeginWithName: @"subsriptionStatus"
+  GBPushSubscriptionStatus_result * result = [[GBPushSubscriptionStatus_result alloc] init];
+  [result setSuccess: [mService subscriptionStatus: [args pushToken] channel: [args channel]]];
+  [outProtocol writeMessageBeginWithName: @"subscriptionStatus"
                                     type: TMessageType_REPLY
                               sequenceID: seqID];
   [result write: outProtocol];

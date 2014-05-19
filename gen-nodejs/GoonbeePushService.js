@@ -315,7 +315,7 @@ GBPushService.GoonbeePushService_subscribedChannels_result.prototype.write = fun
   return;
 };
 
-GBPushService.GoonbeePushService_subsriptionStatus_args = function(args) {
+GBPushService.GoonbeePushService_subscriptionStatus_args = function(args) {
   this.pushToken = null;
   this.channel = null;
   if (args) {
@@ -327,8 +327,8 @@ GBPushService.GoonbeePushService_subsriptionStatus_args = function(args) {
     }
   }
 };
-GBPushService.GoonbeePushService_subsriptionStatus_args.prototype = {};
-GBPushService.GoonbeePushService_subsriptionStatus_args.prototype.read = function(input) {
+GBPushService.GoonbeePushService_subscriptionStatus_args.prototype = {};
+GBPushService.GoonbeePushService_subscriptionStatus_args.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -365,8 +365,8 @@ GBPushService.GoonbeePushService_subsriptionStatus_args.prototype.read = functio
   return;
 };
 
-GBPushService.GoonbeePushService_subsriptionStatus_args.prototype.write = function(output) {
-  output.writeStructBegin('GoonbeePushService_subsriptionStatus_args');
+GBPushService.GoonbeePushService_subscriptionStatus_args.prototype.write = function(output) {
+  output.writeStructBegin('GoonbeePushService_subscriptionStatus_args');
   if (this.pushToken !== null && this.pushToken !== undefined) {
     output.writeFieldBegin('pushToken', Thrift.Type.STRUCT, 1);
     this.pushToken.write(output);
@@ -382,7 +382,7 @@ GBPushService.GoonbeePushService_subsriptionStatus_args.prototype.write = functi
   return;
 };
 
-GBPushService.GoonbeePushService_subsriptionStatus_result = function(args) {
+GBPushService.GoonbeePushService_subscriptionStatus_result = function(args) {
   this.success = null;
   this.error = null;
   if (args instanceof GoonbeeShared_ttypes.RequestError) {
@@ -398,8 +398,8 @@ GBPushService.GoonbeePushService_subsriptionStatus_result = function(args) {
     }
   }
 };
-GBPushService.GoonbeePushService_subsriptionStatus_result.prototype = {};
-GBPushService.GoonbeePushService_subsriptionStatus_result.prototype.read = function(input) {
+GBPushService.GoonbeePushService_subscriptionStatus_result.prototype = {};
+GBPushService.GoonbeePushService_subscriptionStatus_result.prototype.read = function(input) {
   input.readStructBegin();
   while (true)
   {
@@ -436,8 +436,8 @@ GBPushService.GoonbeePushService_subsriptionStatus_result.prototype.read = funct
   return;
 };
 
-GBPushService.GoonbeePushService_subsriptionStatus_result.prototype.write = function(output) {
-  output.writeStructBegin('GoonbeePushService_subsriptionStatus_result');
+GBPushService.GoonbeePushService_subscriptionStatus_result.prototype.write = function(output) {
+  output.writeStructBegin('GoonbeePushService_subscriptionStatus_result');
   if (this.success !== null && this.success !== undefined) {
     output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
     output.writeBool(this.success);
@@ -534,16 +534,16 @@ GBPushService.GoonbeePushServiceClient.prototype.recv_subscribedChannels = funct
   }
   return callback('subscribedChannels failed: unknown result');
 };
-GBPushService.GoonbeePushServiceClient.prototype.subsriptionStatus = function(pushToken, channel, callback) {
+GBPushService.GoonbeePushServiceClient.prototype.subscriptionStatus = function(pushToken, channel, callback) {
   this.seqid += 1;
   this._reqs[this.seqid] = callback;
-  this.send_subsriptionStatus(pushToken, channel);
+  this.send_subscriptionStatus(pushToken, channel);
 };
 
-GBPushService.GoonbeePushServiceClient.prototype.send_subsriptionStatus = function(pushToken, channel) {
+GBPushService.GoonbeePushServiceClient.prototype.send_subscriptionStatus = function(pushToken, channel) {
   var output = new this.pClass(this.output);
-  output.writeMessageBegin('subsriptionStatus', Thrift.MessageType.CALL, this.seqid);
-  var args = new GBPushService.GoonbeePushService_subsriptionStatus_args();
+  output.writeMessageBegin('subscriptionStatus', Thrift.MessageType.CALL, this.seqid);
+  var args = new GBPushService.GoonbeePushService_subscriptionStatus_args();
   args.pushToken = pushToken;
   args.channel = channel;
   args.write(output);
@@ -551,7 +551,7 @@ GBPushService.GoonbeePushServiceClient.prototype.send_subsriptionStatus = functi
   return this.output.flush();
 };
 
-GBPushService.GoonbeePushServiceClient.prototype.recv_subsriptionStatus = function(input,mtype,rseqid) {
+GBPushService.GoonbeePushServiceClient.prototype.recv_subscriptionStatus = function(input,mtype,rseqid) {
   var callback = this._reqs[rseqid] || function() {};
   delete this._reqs[rseqid];
   if (mtype == Thrift.MessageType.EXCEPTION) {
@@ -560,7 +560,7 @@ GBPushService.GoonbeePushServiceClient.prototype.recv_subsriptionStatus = functi
     input.readMessageEnd();
     return callback(x);
   }
-  var result = new GBPushService.GoonbeePushService_subsriptionStatus_result();
+  var result = new GBPushService.GoonbeePushService_subscriptionStatus_result();
   result.read(input);
   input.readMessageEnd();
 
@@ -570,7 +570,7 @@ GBPushService.GoonbeePushServiceClient.prototype.recv_subsriptionStatus = functi
   if (null !== result.success) {
     return callback(null, result.success);
   }
-  return callback('subsriptionStatus failed: unknown result');
+  return callback('subscriptionStatus failed: unknown result');
 };
 GBPushService.GoonbeePushServiceProcessor = exports.Processor = function(handler) {
   this._handler = handler
@@ -617,13 +617,13 @@ GBPushService.GoonbeePushServiceProcessor.prototype.process_subscribedChannels =
   })
 }
 
-GBPushService.GoonbeePushServiceProcessor.prototype.process_subsriptionStatus = function(seqid, input, output) {
-  var args = new GBPushService.GoonbeePushService_subsriptionStatus_args();
+GBPushService.GoonbeePushServiceProcessor.prototype.process_subscriptionStatus = function(seqid, input, output) {
+  var args = new GBPushService.GoonbeePushService_subscriptionStatus_args();
   args.read(input);
   input.readMessageEnd();
-  this._handler.subsriptionStatus(args.pushToken, args.channel, function (err, result) {
-    var result = new GBPushService.GoonbeePushService_subsriptionStatus_result((err != null ? err : {success: result}));
-    output.writeMessageBegin("subsriptionStatus", Thrift.MessageType.REPLY, seqid);
+  this._handler.subscriptionStatus(args.pushToken, args.channel, function (err, result) {
+    var result = new GBPushService.GoonbeePushService_subscriptionStatus_result((err != null ? err : {success: result}));
+    output.writeMessageBegin("subscriptionStatus", Thrift.MessageType.REPLY, seqid);
     result.write(output);
     output.writeMessageEnd();
     output.flush();

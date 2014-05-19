@@ -35,5 +35,5 @@ service GoonbeePushService extends GoonbeeShared.BaseService {
     /**
      * Check whether the user is subscribed on a particular channel or not.
      */
-    bool                subsriptionStatus               (1: PushToken pushToken, 2: string channel)                                     throws(1: GoonbeeShared.RequestError error),
+    bool                subscriptionStatus               (1: PushToken pushToken, 2: string channel)                                    throws(1: GoonbeeShared.RequestError error),
 }
